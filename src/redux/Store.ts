@@ -23,6 +23,9 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, todoReducer)
 
 
+const stateSyncMiddleware = createStateSyncMiddleware({
+  blacklist: ['persist/PERSIST'], // avoid infinite loops
+})
 
 export const store = configureStore({
     reducer:{
