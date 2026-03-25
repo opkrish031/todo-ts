@@ -23,8 +23,8 @@ const todoSlice = createSlice({
         },
         completedTodo (state, action :{payload: string}){
             const idx = state.todos.findIndex(todo => todo.id === action.payload);
-            const todoWhichCompleted = state.todos.splice(idx, 1)[0];
-            state.todos = [...state.todos, {...todoWhichCompleted, completed: true}];
+            // const todoWhichCompleted = state.todos.splice(idx, 1)[0];
+            state.todos[idx].completed = !state.todos[idx].completed;
             setItems(state.todos);
         }
 

@@ -3,6 +3,6 @@ export interface Todo{
     title: string;
     description: string;
     completed: boolean;
-    editedAt?: string;
+    editedTodoOrNot: boolean;
     createdAt: string ;
 }

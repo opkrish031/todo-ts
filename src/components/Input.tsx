@@ -1,6 +1,5 @@
 import { DownCircleOutlined } from "@ant-design/icons";
-import { Button, Form } from "antd";
-import Search from "antd/es/transfer/search";
+import { Button, Form, Input as AntInput } from "antd";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTodo } from "../redux/slices/todoSlice";
@@ -20,6 +19,7 @@ const Input = () => {
           title: text,
           description: description,
           completed: false,
+          editedTodoOrNot: false,
           createdAt: new Date().toISOString(),
         }),
       );
@@ -34,8 +34,8 @@ const Input = () => {
         theme: "light",
         transition: Bounce,
       });
-    } else{
-      toast.error("todo can't be Empty")
+    } else {
+      toast.error("todo can't be Empty");
     }
     setText("");
     setDescription("");
@@ -44,30 +44,41 @@ const Input = () => {
   return (
     <>
       <form
-        className="w-full flex items-center gap-4 mb-4"
+        className="w-full flex items-start gap-3 mb-5"
         onSubmit={(e) => handleAdd(e)}
       >
-        <div className="w-full flex flex-col gap-4">
-          <Search
-            placeholder="input search text"
+        <div className="w-full flex flex-col gap-3">
+          <AntInput
+            placeholder="Enter todo title..."
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e: any) => setText(e.target.value)}
+            className="bg-slate-700 text-slate-200 placeholder-slate-300! border-none rounded-md px-3 py-2 focus:ring-2 focus:ring-sky-400 focus:outline-none "
+            style={{
+              backgroundColor: "#334155", 
+              color: "#e2e8f0",
+              
+            }}
           />
-          <Form.Item>
+
+          <Form.Item className="mb-0">
             <TextArea
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add description..."
+              className="bg-slate-700 text-slate-200 placeholder-slate-300! border-none rounded-md px-3 py-2 focus:ring-2 focus:ring-sky-400 focus:outline-none resize-none"
+              style={{
+                backgroundColor: "#334155", 
+                color: "#e2e8f0",
+              }}
             />
           </Form.Item>
         </div>
 
         <Button
-          variant="filled"
-          color="primary"
-          icon={<DownCircleOutlined />}
-          className="border-2 border-red-500"
           htmlType="submit"
+          icon={<DownCircleOutlined />}
+          className="bg-sky-500 hover:bg-sky-600 text-white border-none rounded-md px-4 py-2 h-full flex items-center justify-center transition-all duration-200"
         >
           Add
         </Button>

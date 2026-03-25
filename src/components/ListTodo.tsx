@@ -35,14 +35,14 @@ const ListTodo = ({ data }: { data: Todo[] }) => {
   };
 
   const saveUpdatedData = () => {
-    if (!editTodoId ) return;
+    if (!editTodoId) return;
     dispatch(
       updateTodo({
         id: editTodoId,
         title: editTodoTitle,
         description: editTodoDesc,
         completed: false,
-        // editedAt: new Date().toISOString(),
+        editedTodoOrNot: true,
         createdAt: new Date().toISOString(),
       }),
     );
@@ -56,47 +56,64 @@ const ListTodo = ({ data }: { data: Todo[] }) => {
   return (
     <>
       <div className="flex-1 overflow-y-auto over">
-        <List
-          size="large"
-          bordered
-          dataSource={data.sort()}
-          renderItem={(item) => (
-            <>
-              <List.Item className="hover:bg-gray-200 flex flex-col w-full">
-                <div className={`hover:bg-gray-200 flex justify-between w-full `}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {data
+            .sort((a, b) => {
+              if (a.completed !== b.completed) {
+                return a.completed ? 1 : -1;
+              }
+              return (
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+              );
+            })
+            .map((item) => (
+              <div
+                key={item.id}
+                className="bg-slate-800 text-slate-200 p-4 rounded-lg shadow hover:bg-slate-700 transition"
+              >
+                <div className="flex justify-between items-start">
                   <Checkbox
-                    className="font-semibold"
                     checked={item.completed}
                     onChange={() => handleTaskCompleted(item.id)}
+                        className="flex items-start w-full"
+
                   >
-                    <p className={`wrap-break-word ${item.completed? 'line-through' : null}`}>{item.title}</p>
+                    <p className={`block w-full break-all  ${item.completed ? "line-through" : ""} text-lg font-semibold text-slate-200`}>
+                      {item.title}
+                    </p>
                   </Checkbox>
-                  <p className={` ${item.completed? 'line-through' : null} text-gray-500 text-sm`}>
-                    {new Date(item.createdAt).toLocaleDateString()} /{" "}
-                    {new Date(item.createdAt).toLocaleTimeString()}
+
+                  <div className="flex gap-2 items-center">
                     <DeleteOutlined
-                      className="mx-2 cursor-pointer text-lg"
+                      className="cursor-pointer text-lg"
                       onClick={() => handleDeleteTodo(item.id)}
                     />
-                    {item.completed? null : (<>
-                    <EditOutlined
-                      className="cursor-pointer text-lg"
-                      onClick={() => handleEditTodo(item)}
-                    />
-                    </>)}
-                    
-                  </p>
+                    {!item.completed && (
+                      <EditOutlined
+                        className="cursor-pointer text-lg"
+                        onClick={() => handleEditTodo(item)}
+                      />
+                    )}
+                  </div>
                 </div>
-                <div className="w-full px-6">
-                  <p className={`${item.completed? 'line-through' : null} text-gray-700 wrap-break-word`}>{item.description}</p>
-                  <p className="text-gray-500 text-sm">
-                    {item.completed ? "Completed" : "Not completed"}
-                  </p>
+
+                <p className={`mt-2 ${item.completed ? "line-through" : ""} wrap-break-word`}>
+                  {item.description}
+                </p>
+
+                <div className="text-sm text-slate-400 mt-3 flex justify-between">
+                  <span>{item.completed ? "Completed" : "Not completed"}</span>
+                  <span>{item.editedTodoOrNot ? "Edited" : ""}</span>
                 </div>
-              </List.Item>
-            </>
-          )}
-        />
+
+                <div className="text-xs text-slate-500 mt-2">
+                  {new Date(item.createdAt).toLocaleDateString()} /{" "}
+                  {new Date(item.createdAt).toLocaleTimeString()}
+                </div>
+              </div>
+            ))}
+        </div>
       </div>
       <Modal
         title="Modal responsive width"
