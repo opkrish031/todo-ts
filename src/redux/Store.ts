@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import todoReducer from "./slices/todoSlice";
+import { createStateSyncMiddleware, initMessageListener } from 'redux-state-sync'
 
 import storage from 'redux-persist/es/storage';
 import persistReducer from "redux-persist/es/persistReducer";
@@ -24,14 +25,19 @@ const persistedReducer = persistReducer(persistConfig, todoReducer)
 
 
 const stateSyncMiddleware = createStateSyncMiddleware({
-  blacklist: ['persist/PERSIST'], // avoid infinite loops
+  blacklist: ['persist/PERSIST'], 
 })
 
 export const store = configureStore({
     reducer:{
         todos: persistedReducer,
+    },
+    middleware: (getDefaultMiddleware) =>{
+        return getDefaultMiddleware().concat(stateSyncMiddleware);
     }
 })
+
+initMessageListener(store)
 
 export const persistor = persistStore(store);
 

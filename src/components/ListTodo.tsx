@@ -1,4 +1,4 @@
-import { Checkbox, Form, List, Modal } from "antd";
+import { Checkbox, Form, Modal } from "antd";
 import type { Todo } from "../Interface";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
